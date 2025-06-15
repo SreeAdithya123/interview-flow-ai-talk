@@ -76,7 +76,7 @@ const Index = () => {
   ];
 
   const handleTryNow = () => {
-    window.open("https://elevenlabs.io/app/talk-to?agent_id=agent_01jxrsbbnre6g980t2vkyx3q9t", "_blank");
+    window.open("https://elevenlabs.io/app/talk-to?agent_id=agent_01jxsme3j2ftb8mz73n7sv1vkc", "_blank");
   };
 
   const handleWatchDemo = () => {
@@ -85,7 +85,7 @@ const Index = () => {
   };
 
   const handleStartConversation = () => {
-    window.open("https://elevenlabs.io/app/talk-to?agent_id=agent_01jxrsbbnre6g980t2vkyx3q9t", "_blank");
+    window.open("https://elevenlabs.io/app/talk-to?agent_id=agent_01jxsme3j2ftb8mz73n7sv1vkc", "_blank");
   };
 
   return (
@@ -278,3 +278,4 @@ const Index = () => {
 };
 
 export default Index;
+
