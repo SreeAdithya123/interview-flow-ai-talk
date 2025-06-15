@@ -91,11 +91,8 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gray-900">
       {/* Hero Section */}
-      <section 
-        className="min-h-screen flex items-center justify-center bg-cover bg-center relative overflow-hidden"
-        style={{ backgroundImage: "url('https://lovable-public-assets.s3.amazonaws.com/uploads/1721151622340-p98pqg.png')" }}
-      >
-        <div className="absolute inset-0 bg-black opacity-50"></div>
+      <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-lime-400 via-green-500 to-emerald-600 relative overflow-hidden">
+        <div className="absolute inset-0 bg-black opacity-10"></div>
         <div className="text-center z-10 px-4 animate-fade-in">
           <h1 className="text-6xl md:text-8xl font-bold text-white mb-6 animate-scale-in">
             AI-Interviewer
