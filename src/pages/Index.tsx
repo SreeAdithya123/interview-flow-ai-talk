@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { CheckCircle, FileText, Zap, Palette } from "lucide-react";
+import { CheckCircle, FileText, Zap, Palette, Brain, Shield, Clock, Users, Target, Award, TrendingUp, MessageSquare } from "lucide-react";
 
 const Index = () => {
   const features = [
@@ -19,6 +19,21 @@ const Index = () => {
       icon: <Palette className="w-8 h-8 text-green-400" />,
       title: "Natural Voice Quality",
       description: "Premium voice synthesis that's indistinguishable from human speech. Powered by cutting-edge ElevenLabs technology for emotionally expressive, crystal-clear audio."
+    },
+    {
+      icon: <Brain className="w-8 h-8 text-green-400" />,
+      title: "Advanced AI Reasoning",
+      description: "Deep learning algorithms that understand context, follow-up questions, and behavioral patterns to provide comprehensive interview assessments and feedback."
+    },
+    {
+      icon: <Shield className="w-8 h-8 text-green-400" />,
+      title: "Privacy & Security",
+      description: "Enterprise-grade security with end-to-end encryption. Your interview data is protected with bank-level security protocols and GDPR compliance."
+    },
+    {
+      icon: <Target className="w-8 h-8 text-green-400" />,
+      title: "Personalized Experience",
+      description: "Adaptive AI that customizes questions based on your industry, experience level, and career goals. Every session is tailored specifically for you."
     }
   ];
 
@@ -26,12 +41,37 @@ const Index = () => {
     {
       icon: <CheckCircle className="w-6 h-6 text-blue-400" />,
       title: "Enhanced Interview Experience",
-      description: "Provide comprehensive interview practice with instant feedback and evaluation, leading to better candidate preparation and confidence."
+      description: "Provide comprehensive interview practice with instant feedback and evaluation, leading to better candidate preparation and confidence. Our AI creates realistic scenarios that mirror actual interview conditions."
     },
     {
       icon: <FileText className="w-6 h-6 text-orange-400" />,
       title: "Increased Operational Efficiency",
-      description: "Automate initial screening processes and free up valuable human resources to focus on more strategic hiring initiatives."
+      description: "Automate initial screening processes and free up valuable human resources to focus on more strategic hiring initiatives. Reduce time-to-hire by up to 60% while maintaining quality."
+    },
+    {
+      icon: <Clock className="w-6 h-6 text-purple-400" />,
+      title: "24/7 Availability",
+      description: "Practice interviews anytime, anywhere. No scheduling conflicts or waiting periods. Our AI interviewer is always ready when you are, supporting global teams across all time zones."
+    },
+    {
+      icon: <Users className="w-6 h-6 text-cyan-400" />,
+      title: "Scalable Solution",
+      description: "Handle thousands of simultaneous interviews without compromising quality. Perfect for large organizations, universities, and recruitment agencies with high-volume hiring needs."
+    },
+    {
+      icon: <Award className="w-6 h-6 text-yellow-400" />,
+      title: "Bias-Free Assessment",
+      description: "Eliminate unconscious bias with objective, data-driven evaluations. Every candidate receives fair, consistent assessment based purely on their responses and qualifications."
+    },
+    {
+      icon: <TrendingUp className="w-6 h-6 text-green-400" />,
+      title: "Performance Analytics",
+      description: "Detailed insights and performance metrics help candidates identify strengths and improvement areas. Track progress over time with comprehensive reporting and trend analysis."
+    },
+    {
+      icon: <MessageSquare className="w-6 h-6 text-indigo-400" />,
+      title: "Multi-Language Support",
+      description: "Conduct interviews in 29+ languages with native-level fluency. Break down language barriers and expand your talent pool globally with seamless multilingual capabilities."
     }
   ];
 
@@ -88,7 +128,7 @@ const Index = () => {
             <div className="w-24 h-1 bg-green-500 mx-auto"></div>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
               <Card 
                 key={index} 
@@ -117,15 +157,18 @@ const Index = () => {
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Why Choose Our AI Interviewer?
             </h2>
+            <p className="text-xl text-gray-300 mb-6 max-w-3xl mx-auto">
+              Transform your hiring process and candidate experience with cutting-edge AI technology that delivers results
+            </p>
             <div className="w-24 h-1 bg-green-500 mx-auto"></div>
           </div>
           
-          <div className="space-y-8">
+          <div className="grid md:grid-cols-2 gap-8">
             {benefits.map((benefit, index) => (
               <Card 
                 key={index}
                 className="bg-gray-900/50 border-green-500/30 p-8 hover:border-green-400/50 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-green-500/10 animate-fade-in backdrop-blur-sm"
-                style={{ animationDelay: `${index * 300}ms` }}
+                style={{ animationDelay: `${index * 150}ms` }}
               >
                 <div className="flex items-start gap-6">
                   <div className="bg-gradient-to-br from-blue-500 to-purple-600 w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0">
