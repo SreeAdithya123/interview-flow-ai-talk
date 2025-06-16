@@ -48,7 +48,7 @@ const Dashboard = () => {
   };
 
   const goHome = () => {
-    window.location.href = "/";
+    window.location.href = "/#/home";
   };
 
   const goToProfile = () => {
