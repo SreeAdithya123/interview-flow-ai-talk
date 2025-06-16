@@ -1,11 +1,10 @@
-
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
-import { User, TrendingUp, Clock, Target, Award, BarChart3, PieChart as PieChartIcon, LogOut } from "lucide-react";
+import { User, TrendingUp, Clock, Target, Award, BarChart3, PieChart as PieChartIcon, LogOut, Settings } from "lucide-react";
 
 const Dashboard = () => {
   const [user] = useState({
@@ -52,6 +51,10 @@ const Dashboard = () => {
     window.location.href = "/";
   };
 
+  const goToProfile = () => {
+    window.location.href = "/#/profile";
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 p-6">
       <div className="max-w-7xl mx-auto">
@@ -69,6 +72,14 @@ const Dashboard = () => {
               className="bg-gray-700 hover:bg-gray-600 text-white border-gray-600"
             >
               Home
+            </Button>
+            <Button 
+              onClick={goToProfile}
+              variant="outline" 
+              className="bg-gray-700 hover:bg-gray-600 text-white border-gray-600"
+            >
+              <Settings className="w-4 h-4 mr-2" />
+              Profile
             </Button>
             <Button 
               onClick={handleLogout}
