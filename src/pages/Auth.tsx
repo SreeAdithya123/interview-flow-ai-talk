@@ -29,7 +29,8 @@ const Auth = () => {
     if (isLogin) {
       // Handle login
       console.log("Login attempt:", { email: formData.email, password: formData.password });
-      // Add login logic here
+      // Simulate successful login and redirect to dashboard
+      window.location.href = "/#/dashboard";
     } else {
       // Handle registration
       if (formData.password !== formData.confirmPassword) {
@@ -37,7 +38,8 @@ const Auth = () => {
         return;
       }
       console.log("Registration attempt:", formData);
-      // Add registration logic here
+      // Simulate successful registration and redirect to dashboard
+      window.location.href = "/#/dashboard";
     }
   };
 
