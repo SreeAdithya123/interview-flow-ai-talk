@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CheckCircle, FileText, Zap, Palette, Brain, Shield, Clock, Users, Target, Award, TrendingUp, MessageSquare } from "lucide-react";
@@ -79,9 +78,8 @@ const Index = () => {
     window.open("https://elevenlabs.io/app/talk-to?agent_id=agent_01jxsme3j2ftb8mz73n7sv1vkc", "_blank");
   };
 
-  const handleWatchDemo = () => {
-    // Placeholder for demo functionality
-    console.log("Watch Demo clicked");
+  const handleGetStarted = () => {
+    window.location.href = "/#/auth";
   };
 
   const handleStartConversation = () => {
@@ -108,11 +106,11 @@ const Index = () => {
               Try Now
             </Button>
             <Button 
-              onClick={handleWatchDemo}
+              onClick={handleGetStarted}
               variant="outline" 
               className="bg-white/20 hover:bg-white/30 text-white border-white/30 hover:border-white/50 px-8 py-4 text-lg rounded-full transition-all duration-300 hover:scale-105 backdrop-blur-sm"
             >
-              Watch Demo
+              Get Started
             </Button>
           </div>
         </div>
@@ -278,4 +276,3 @@ const Index = () => {
 };
 
 export default Index;
-
