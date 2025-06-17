@@ -12,11 +12,13 @@ const Index = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Only redirect if user is authenticated and not loading
     if (!loading && user) {
       navigate("/home");
     }
   }, [user, loading, navigate]);
 
+  // Show loading only briefly, then show landing page
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
@@ -25,6 +27,7 @@ const Index = () => {
     );
   }
 
+  // Always show landing page for non-authenticated users
   return (
     <div className="min-h-screen bg-gray-900">
       {/* Hero Section */}
@@ -52,7 +55,7 @@ const Index = () => {
                 className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 text-lg h-auto"
               >
                 <Zap className="w-5 h-5 mr-2" />
-                Try Now - It's Free
+                Get Started - It's Free
               </Button>
               <Button 
                 variant="outline"
