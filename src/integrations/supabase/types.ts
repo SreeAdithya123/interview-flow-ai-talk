@@ -9,7 +9,144 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      interview_sessions: {
+        Row: {
+          created_at: string
+          duration_minutes: number | null
+          id: string
+          overall_score: number | null
+          session_type: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          duration_minutes?: number | null
+          id?: string
+          overall_score?: number | null
+          session_type?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          duration_minutes?: number | null
+          id?: string
+          overall_score?: number | null
+          session_type?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interview_sessions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_coins: {
+        Row: {
+          created_at: string
+          free_coins: number
+          id: string
+          plan_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          free_coins?: number
+          id?: string
+          plan_type?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          free_coins?: number
+          id?: string
+          plan_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_coins_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      voice_analysis: {
+        Row: {
+          clarity_score: number | null
+          confidence_score: number | null
+          created_at: string
+          id: string
+          pace_score: number | null
+          session_id: string
+          tone_score: number | null
+        }
+        Insert: {
+          clarity_score?: number | null
+          confidence_score?: number | null
+          created_at?: string
+          id?: string
+          pace_score?: number | null
+          session_id: string
+          tone_score?: number | null
+        }
+        Update: {
+          clarity_score?: number | null
+          confidence_score?: number | null
+          created_at?: string
+          id?: string
+          pace_score?: number | null
+          session_id?: string
+          tone_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "voice_analysis_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "interview_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
