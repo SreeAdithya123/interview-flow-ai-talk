@@ -1,73 +1,26 @@
-
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  
-  const { signIn, signUp, user } = useAuth();
-  const navigate = useNavigate();
-  const { toast } = useToast();
 
-  // Redirect if already authenticated
-  if (user) {
-    navigate("/home");
-    return null;
-  }
-
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    
-    const { error } = await signIn(email, password);
-    
-    if (error) {
-      toast({
-        title: "Login Failed",
-        description: error.message,
-        variant: "destructive"
-      });
-    } else {
-      toast({
-        title: "Welcome back!",
-        description: "You have successfully logged in."
-      });
-      navigate("/home");
-    }
-    
-    setLoading(false);
+    console.log("Login attempted with:", { email, password });
+    // Simulate successful login
+    window.location.href = "/#/home";
   };
 
-  const handleSignup = async (e: React.FormEvent) => {
+  const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    
-    const { error } = await signUp(email, password, name);
-    
-    if (error) {
-      toast({
-        title: "Signup Failed",
-        description: error.message,
-        variant: "destructive"
-      });
-    } else {
-      toast({
-        title: "Account Created!",
-        description: "Please check your email to verify your account."
-      });
-      navigate("/home");
-    }
-    
-    setLoading(false);
+    console.log("Signup attempted with:", { name, email, password });
+    // Simulate successful signup
+    window.location.href = "/#/home";
   };
 
   return (
@@ -84,11 +37,11 @@ const Auth = () => {
             {!isLogin && (
               <div>
                 <label className="block text-gray-300 text-sm font-bold mb-2">
-                  Full Name
+                  Name
                 </label>
                 <Input
                   type="text"
-                  placeholder="Your Full Name"
+                  placeholder="Your Name"
                   className="bg-gray-700 text-white focus-visible:ring-green-500"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -123,12 +76,8 @@ const Auth = () => {
               />
             </div>
             <div>
-              <Button 
-                type="submit" 
-                className="w-full bg-green-600 hover:bg-green-700 text-white"
-                disabled={loading}
-              >
-                {loading ? "Please wait..." : (isLogin ? "Login" : "Sign Up")}
+              <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white">
+                {isLogin ? "Login" : "Sign Up"}
               </Button>
             </div>
           </form>

@@ -1,92 +1,46 @@
 
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import { useUserData } from "@/hooks/useUserData";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { User, Settings, CreditCard, LogOut, Coins, Zap, Crown, Star } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 
 const Home = () => {
-  const { user, signOut, loading: authLoading } = useAuth();
-  const { profile, coins, updateCoins, addInterviewSession, addVoiceAnalysis, loading: dataLoading } = useUserData();
-  const navigate = useNavigate();
-  const { toast } = useToast();
+  const [user] = useState({
+    name: "John Doe",
+    email: "john.doe@example.com",
+    isFirstTime: false, // Set to true for first-time users
+    freeCoins: 3,
+    plan: "Free" // Free, Plus, Premium
+  });
 
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/auth");
-    }
-  }, [user, authLoading, navigate]);
+  const [coins, setCoins] = useState(user.freeCoins);
 
-  if (authLoading || dataLoading || !user || !profile || !coins) {
-    return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-white">Loading...</div>
-      </div>
-    );
-  }
-
-  const handleStartInterview = async () => {
-    if (coins.free_coins > 0) {
-      // Create interview session
-      const sessionId = await addInterviewSession({
-        session_type: "general",
-        duration_minutes: 30
-      });
-      
-      // Update coins
-      await updateCoins(coins.free_coins - 1);
-      
-      // Open AI interview in new tab
+  const handleStartInterview = () => {
+    if (coins > 0) {
+      setCoins(coins - 1);
       window.open("https://elevenlabs.io/app/talk-to?agent_id=agent_01jxsme3j2ftb8mz73n7sv1vkc", "_blank");
-      
-      // Simulate adding analysis after interview (in real app, this would come from AI)
-      setTimeout(async () => {
-        if (sessionId) {
-          await addVoiceAnalysis(sessionId, {
-            clarity_score: Math.floor(Math.random() * 20) + 80,
-            confidence_score: Math.floor(Math.random() * 20) + 75,
-            pace_score: Math.floor(Math.random() * 20) + 80,
-            tone_score: Math.floor(Math.random() * 20) + 75
-          });
-          
-          toast({
-            title: "Interview Completed!",
-            description: "Your analysis has been updated in the dashboard."
-          });
-        }
-      }, 5000); // Simulate 5 second interview for demo
-      
-      toast({
-        title: "Interview Started!",
-        description: "Your session has been recorded."
-      });
     }
   };
 
   const handleUpgrade = () => {
-    navigate("/profile");
+    window.location.href = "/#/profile";
   };
 
-  const handleLogout = async () => {
-    await signOut();
-    navigate("/auth");
+  const handleLogout = () => {
+    window.location.href = "/#/auth";
   };
 
   const goToProfile = () => {
-    navigate("/profile");
+    window.location.href = "/#/profile";
   };
 
   const goToDashboard = () => {
-    navigate("/dashboard");
+    window.location.href = "/#/dashboard";
   };
 
   const goToPricing = () => {
-    navigate("/profile");
+    window.location.href = "/#/profile";
   };
 
   return (
@@ -128,7 +82,7 @@ const Home = () => {
             {/* Coin Display */}
             <div className="flex items-center gap-2 bg-gray-700 px-3 py-2 rounded-full">
               <Coins className="w-5 h-5 text-yellow-400" />
-              <span className="text-white font-semibold">{coins.free_coins}</span>
+              <span className="text-white font-semibold">{coins}</span>
               <span className="text-gray-400 text-sm">coins</span>
             </div>
             
@@ -136,7 +90,7 @@ const Home = () => {
               <div className="bg-green-500/20 w-8 h-8 rounded-full flex items-center justify-center">
                 <User className="w-4 h-4 text-green-400" />
               </div>
-              <span className="text-white">{profile.full_name || profile.email}</span>
+              <span className="text-white">{user.name}</span>
             </div>
             
             <Button 
@@ -156,7 +110,10 @@ const Home = () => {
         {/* Welcome Section */}
         <div className="text-center mb-8">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Hey {profile.full_name || profile.email}!!! Let's Begin Your Interview
+            {user.isFirstTime 
+              ? `Hey ${user.name}!!! Let's Begin Your First Interview` 
+              : `Hey ${user.name}... Welcome Back. Let's Begin Our Interview`
+            }
           </h2>
           <p className="text-gray-400 text-lg">
             Practice with our AI interviewer and improve your skills
@@ -176,11 +133,11 @@ const Home = () => {
                 Begin your interview practice session with our advanced AI interviewer
               </p>
               
-              {coins.free_coins > 0 ? (
+              {coins > 0 ? (
                 <div className="space-y-4">
                   <div className="flex items-center justify-center gap-2 text-green-400">
                     <Coins className="w-5 h-5" />
-                    <span className="font-semibold">{coins.free_coins} free interviews remaining</span>
+                    <span className="font-semibold">{coins} free interviews remaining</span>
                   </div>
                   <Button 
                     onClick={handleStartInterview}
@@ -214,14 +171,14 @@ const Home = () => {
               <h3 className="text-2xl font-bold text-white mb-4">Your Coins</h3>
               
               <div className="space-y-4">
-                <div className="text-4xl font-bold text-yellow-400">{coins.free_coins}</div>
+                <div className="text-4xl font-bold text-yellow-400">{coins}</div>
                 <p className="text-gray-300">Free interviews remaining</p>
                 
                 <div className="bg-gray-700/50 p-4 rounded-lg">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-gray-300">Current Plan</span>
                     <Badge variant="outline" className="text-green-400 border-green-400">
-                      {coins.plan_type.charAt(0).toUpperCase() + coins.plan_type.slice(1)}
+                      {user.plan}
                     </Badge>
                   </div>
                   <p className="text-sm text-gray-400">
@@ -229,7 +186,7 @@ const Home = () => {
                   </p>
                 </div>
 
-                {coins.free_coins === 0 && (
+                {coins === 0 && (
                   <Button 
                     onClick={handleUpgrade}
                     className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-2 rounded-full w-full"
@@ -244,11 +201,11 @@ const Home = () => {
         </div>
 
         {/* Plan Upgrade Section */}
-        {coins.free_coins <= 1 && (
+        {coins <= 1 && (
           <Card className="bg-gradient-to-r from-purple-900/50 to-blue-900/50 border-purple-500/30 p-8 mb-8">
             <div className="text-center">
               <h3 className="text-2xl font-bold text-white mb-4">
-                {coins.free_coins === 0 ? "Out of Free Interviews!" : "Almost Out of Coins!"}
+                {coins === 0 ? "Out of Free Interviews!" : "Almost Out of Coins!"}
               </h3>
               <p className="text-gray-300 mb-6">
                 Upgrade to Plus or Premium for unlimited interviews and advanced features

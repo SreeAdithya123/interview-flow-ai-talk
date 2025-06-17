@@ -1,8 +1,4 @@
-
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import { useUserData } from "@/hooks/useUserData";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -11,72 +7,30 @@ import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Respon
 import { User, TrendingUp, Clock, Target, Award, BarChart3, PieChart as PieChartIcon, LogOut, Settings } from "lucide-react";
 
 const Dashboard = () => {
-  const { user, signOut, loading: authLoading } = useAuth();
-  const { profile, sessions, loading: dataLoading } = useUserData();
-  const navigate = useNavigate();
+  const [user] = useState({
+    name: "John Doe",
+    email: "john.doe@example.com",
+    totalInterviews: 12,
+    averageScore: 78,
+    lastInterviewDate: "2024-01-15"
+  });
 
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/auth");
-    }
-  }, [user, authLoading, navigate]);
-
-  if (authLoading || dataLoading || !user || !profile) {
-    return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-white">Loading...</div>
-      </div>
-    );
-  }
-
-  // Calculate analytics from real data
-  const latestSession = sessions[0];
-  const averageScore = sessions.length > 0 
-    ? Math.round(sessions.reduce((acc, session) => acc + (session.overall_score || 0), 0) / sessions.length)
-    : 0;
-
-  // Voice analysis data from latest session or defaults
-  const voiceAnalysisData = latestSession?.voice_analysis ? [
-    { name: "Clarity", value: latestSession.voice_analysis.clarity_score, color: "#10B981" },
-    { name: "Confidence", value: latestSession.voice_analysis.confidence_score, color: "#3B82F6" },
-    { name: "Pace", value: latestSession.voice_analysis.pace_score, color: "#F59E0B" },
-    { name: "Tone", value: latestSession.voice_analysis.tone_score, color: "#EF4444" },
-  ] : [
-    { name: "Clarity", value: 0, color: "#10B981" },
-    { name: "Confidence", value: 0, color: "#3B82F6" },
-    { name: "Pace", value: 0, color: "#F59E0B" },
-    { name: "Tone", value: 0, color: "#EF4444" },
+  // Pie chart data for voice analysis
+  const voiceAnalysisData = [
+    { name: "Clarity", value: 85, color: "#10B981" },
+    { name: "Confidence", value: 78, color: "#3B82F6" },
+    { name: "Pace", value: 82, color: "#F59E0B" },
+    { name: "Tone", value: 75, color: "#EF4444" },
   ];
 
-  // Interview comparison data
-  const interviewComparisonData = sessions.length >= 2 ? [
-    { 
-      category: "Communication", 
-      lastInterview: sessions[1]?.voice_analysis?.clarity_score || 0, 
-      latestInterview: sessions[0]?.voice_analysis?.clarity_score || 0 
-    },
-    { 
-      category: "Confidence", 
-      lastInterview: sessions[1]?.voice_analysis?.confidence_score || 0, 
-      latestInterview: sessions[0]?.voice_analysis?.confidence_score || 0 
-    },
-    { 
-      category: "Pace", 
-      lastInterview: sessions[1]?.voice_analysis?.pace_score || 0, 
-      latestInterview: sessions[0]?.voice_analysis?.pace_score || 0 
-    },
-    { 
-      category: "Tone", 
-      lastInterview: sessions[1]?.voice_analysis?.tone_score || 0, 
-      latestInterview: sessions[0]?.voice_analysis?.tone_score || 0 
-    },
-    { 
-      category: "Overall Score", 
-      lastInterview: sessions[1]?.overall_score || 0, 
-      latestInterview: sessions[0]?.overall_score || 0 
-    },
-  ] : [];
+  // Bar chart data for interview comparison
+  const interviewComparisonData = [
+    { category: "Communication", lastInterview: 72, latestInterview: 85 },
+    { category: "Technical Skills", lastInterview: 68, latestInterview: 78 },
+    { category: "Problem Solving", lastInterview: 75, latestInterview: 82 },
+    { category: "Confidence", lastInterview: 70, latestInterview: 88 },
+    { category: "Overall Score", lastInterview: 71, latestInterview: 83 },
+  ];
 
   const chartConfig = {
     lastInterview: {
@@ -89,17 +43,16 @@ const Dashboard = () => {
     },
   };
 
-  const handleLogout = async () => {
-    await signOut();
-    navigate("/auth");
+  const handleLogout = () => {
+    window.location.href = "/#/auth";
   };
 
   const goHome = () => {
-    navigate("/home");
+    window.location.href = "/#/home";
   };
 
   const goToProfile = () => {
-    navigate("/profile");
+    window.location.href = "/#/profile";
   };
 
   return (
@@ -146,16 +99,16 @@ const Dashboard = () => {
               <User className="w-10 h-10 text-green-400" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-white mb-1">{profile.full_name || profile.email}</h2>
-              <p className="text-gray-400 mb-2">{profile.email}</p>
+              <h2 className="text-2xl font-bold text-white mb-1">{user.name}</h2>
+              <p className="text-gray-400 mb-2">{user.email}</p>
               <div className="flex gap-6 text-sm">
                 <span className="text-gray-300">
                   <Clock className="w-4 h-4 inline mr-1" />
-                  Last Interview: {latestSession ? new Date(latestSession.created_at).toLocaleDateString() : "None"}
+                  Last Interview: {user.lastInterviewDate}
                 </span>
                 <span className="text-gray-300">
                   <Target className="w-4 h-4 inline mr-1" />
-                  Total Interviews: {sessions.length}
+                  Total Interviews: {user.totalInterviews}
                 </span>
               </div>
             </div>
@@ -167,17 +120,17 @@ const Dashboard = () => {
                 <Award className="w-5 h-5 text-green-400" />
                 <span className="text-gray-300">Average Score</span>
               </div>
-              <div className="text-2xl font-bold text-white mb-2">{averageScore}%</div>
-              <Progress value={averageScore} className="h-2" />
+              <div className="text-2xl font-bold text-white mb-2">{user.averageScore}%</div>
+              <Progress value={user.averageScore} className="h-2" />
             </div>
             
             <div className="bg-gray-700/50 p-4 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <TrendingUp className="w-5 h-5 text-blue-400" />
-                <span className="text-gray-300">Latest Score</span>
+                <span className="text-gray-300">Improvement</span>
               </div>
-              <div className="text-2xl font-bold text-green-400 mb-2">{latestSession?.overall_score || 0}%</div>
-              <p className="text-sm text-gray-400">From last interview</p>
+              <div className="text-2xl font-bold text-green-400 mb-2">+12%</div>
+              <p className="text-sm text-gray-400">From last month</p>
             </div>
             
             <div className="bg-gray-700/50 p-4 rounded-lg">
@@ -185,17 +138,8 @@ const Dashboard = () => {
                 <Target className="w-5 h-5 text-purple-400" />
                 <span className="text-gray-300">Best Category</span>
               </div>
-              <div className="text-lg font-bold text-white mb-1">
-                {latestSession?.voice_analysis ? 
-                  Object.entries({
-                    Clarity: latestSession.voice_analysis.clarity_score,
-                    Confidence: latestSession.voice_analysis.confidence_score,
-                    Pace: latestSession.voice_analysis.pace_score,
-                    Tone: latestSession.voice_analysis.tone_score
-                  }).reduce((a, b) => a[1] > b[1] ? a : b)[0] : "N/A"
-                }
-              </div>
-              <p className="text-sm text-gray-400">Highest score</p>
+              <div className="text-lg font-bold text-white mb-1">Communication</div>
+              <p className="text-sm text-gray-400">85% score</p>
             </div>
           </div>
         </Card>
@@ -209,47 +153,39 @@ const Dashboard = () => {
               <h3 className="text-xl font-bold text-white">Voice Analysis</h3>
             </div>
             
-            {latestSession?.voice_analysis ? (
-              <>
-                <ChartContainer config={chartConfig} className="h-80">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={voiceAnalysisData}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={60}
-                        outerRadius={100}
-                        paddingAngle={5}
-                        dataKey="value"
-                      >
-                        {voiceAnalysisData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </ChartContainer>
-                
-                <div className="grid grid-cols-2 gap-4 mt-6">
-                  {voiceAnalysisData.map((item) => (
-                    <div key={item.name} className="flex items-center gap-2">
-                      <div 
-                        className="w-3 h-3 rounded-full" 
-                        style={{ backgroundColor: item.color }}
-                      ></div>
-                      <span className="text-gray-300 text-sm">{item.name}</span>
-                      <span className="text-white font-semibold ml-auto">{item.value}%</span>
-                    </div>
-                  ))}
+            <ChartContainer config={chartConfig} className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={voiceAnalysisData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={100}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {voiceAnalysisData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                </PieChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+            
+            <div className="grid grid-cols-2 gap-4 mt-6">
+              {voiceAnalysisData.map((item) => (
+                <div key={item.name} className="flex items-center gap-2">
+                  <div 
+                    className="w-3 h-3 rounded-full" 
+                    style={{ backgroundColor: item.color }}
+                  ></div>
+                  <span className="text-gray-300 text-sm">{item.name}</span>
+                  <span className="text-white font-semibold ml-auto">{item.value}%</span>
                 </div>
-              </>
-            ) : (
-              <div className="h-80 flex items-center justify-center text-gray-400">
-                <p>No interview data available yet. Complete your first interview to see analysis!</p>
-              </div>
-            )}
+              ))}
+            </div>
           </Card>
 
           {/* Interview Comparison Bar Chart */}
@@ -259,44 +195,36 @@ const Dashboard = () => {
               <h3 className="text-xl font-bold text-white">Interview Comparison</h3>
             </div>
             
-            {interviewComparisonData.length > 0 ? (
-              <>
-                <ChartContainer config={chartConfig} className="h-80">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={interviewComparisonData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                      <XAxis 
-                        dataKey="category" 
-                        stroke="#9CA3AF" 
-                        fontSize={12}
-                        angle={-45}
-                        textAnchor="end"
-                        height={80}
-                      />
-                      <YAxis stroke="#9CA3AF" fontSize={12} />
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                      <Bar dataKey="lastInterview" fill="#94A3B8" name="Last Interview" radius={4} />
-                      <Bar dataKey="latestInterview" fill="#10B981" name="Latest Interview" radius={4} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </ChartContainer>
-                
-                <div className="flex justify-center gap-6 mt-6">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-gray-400"></div>
-                    <span className="text-gray-300 text-sm">Last Interview</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                    <span className="text-gray-300 text-sm">Latest Interview</span>
-                  </div>
-                </div>
-              </>
-            ) : (
-              <div className="h-80 flex items-center justify-center text-gray-400">
-                <p>Complete at least 2 interviews to see comparison data!</p>
+            <ChartContainer config={chartConfig} className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={interviewComparisonData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis 
+                    dataKey="category" 
+                    stroke="#9CA3AF" 
+                    fontSize={12}
+                    angle={-45}
+                    textAnchor="end"
+                    height={80}
+                  />
+                  <YAxis stroke="#9CA3AF" fontSize={12} />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <Bar dataKey="lastInterview" fill="#94A3B8" name="Last Interview" radius={4} />
+                  <Bar dataKey="latestInterview" fill="#10B981" name="Latest Interview" radius={4} />
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+            
+            <div className="flex justify-center gap-6 mt-6">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-gray-400"></div>
+                <span className="text-gray-300 text-sm">Last Interview</span>
               </div>
-            )}
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                <span className="text-gray-300 text-sm">Latest Interview</span>
+              </div>
+            </div>
           </Card>
         </div>
 
@@ -304,33 +232,29 @@ const Dashboard = () => {
         <Card className="bg-gray-800 border-green-500/30 p-6 mt-8">
           <h3 className="text-xl font-bold text-white mb-6">Recent Interview Sessions</h3>
           
-          {sessions.length > 0 ? (
-            <div className="space-y-4">
-              {sessions.slice(0, 3).map((session) => (
-                <div key={session.id} className="flex items-center justify-between p-4 bg-gray-700/50 rounded-lg">
-                  <div className="flex items-center gap-4">
-                    <div className="bg-green-500/20 w-10 h-10 rounded-full flex items-center justify-center">
-                      <Target className="w-5 h-5 text-green-400" />
-                    </div>
-                    <div>
-                      <h4 className="text-white font-semibold">{session.session_type} Interview</h4>
-                      <p className="text-gray-400 text-sm">
-                        {new Date(session.created_at).toLocaleDateString()} • {session.duration_minutes || 30} min
-                      </p>
-                    </div>
+          <div className="space-y-4">
+            {[
+              { date: "2024-01-15", type: "Technical Interview", score: 83, duration: "45 min" },
+              { date: "2024-01-10", type: "Behavioral Interview", score: 78, duration: "30 min" },
+              { date: "2024-01-05", type: "System Design", score: 71, duration: "60 min" },
+            ].map((session, index) => (
+              <div key={index} className="flex items-center justify-between p-4 bg-gray-700/50 rounded-lg">
+                <div className="flex items-center gap-4">
+                  <div className="bg-green-500/20 w-10 h-10 rounded-full flex items-center justify-center">
+                    <Target className="w-5 h-5 text-green-400" />
                   </div>
-                  <div className="text-right">
-                    <div className="text-lg font-bold text-green-400">{session.overall_score || 0}%</div>
-                    <div className="text-sm text-gray-400">Score</div>
+                  <div>
+                    <h4 className="text-white font-semibold">{session.type}</h4>
+                    <p className="text-gray-400 text-sm">{session.date} • {session.duration}</p>
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8 text-gray-400">
-              <p>No interview sessions yet. Start your first interview to see your progress!</p>
-            </div>
-          )}
+                <div className="text-right">
+                  <div className="text-lg font-bold text-green-400">{session.score}%</div>
+                  <div className="text-sm text-gray-400">Score</div>
+                </div>
+              </div>
+            ))}
+          </div>
         </Card>
       </div>
     </div>
